@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+const BACKEND_URL =
+  process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://backend:3000';
 
 export default function Home({ latestItem, initialItems }) {
   const [searchText, setSearchText] = useState('');
