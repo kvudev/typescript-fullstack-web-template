@@ -1,0 +1,8 @@
+fix the issue
+
+Error: Additional keys were returned from `getServerSideProps`. Properties intended for your component must be nested under the `props` key, e.g.:
+
+	return { props: { title: 'My Title', content: '...' } }
+
+Keys that need to be moved: revalidate.
+Read more: https://nextjs.org/docs/messages/invalid-getserversideprops-value

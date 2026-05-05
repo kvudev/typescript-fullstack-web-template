@@ -94,16 +94,14 @@ export async function getServerSideProps() {
     return {
       props: {
         initialItems: listData.items || []
-      },
-      revalidate: 60
+      }
     };
   } catch (error) {
     console.error('Failed to fetch content:', error);
     return {
       props: {
         initialItems: []
-      },
-      revalidate: 30
+      }
     };
   }
 }
