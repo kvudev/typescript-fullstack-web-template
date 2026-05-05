@@ -3,8 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
+    branches:
+      - master
 
 jobs:
   build-and-deploy:
@@ -19,9 +21,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install backend dependencies
+      - name: Install backend API dependencies
         run: |
-          cd backend
+          cd backend/api
+          npm install
+
+      - name: Install backend workers dependencies
+        run: |
+          cd backend/workers
           npm install
 
       - name: Install frontend dependencies
@@ -29,9 +36,14 @@ jobs:
           cd frontend
           npm install
 
-      - name: Run backend tests
+      - name: Run backend API tests
         run: |
-          cd backend
+          cd backend/api
+          npm test
+
+      - name: Run backend workers tests
+        run: |
+          cd backend/workers
           npm test
 
       - name: Run frontend tests
@@ -40,9 +52,10 @@ jobs:
           npm test
 
       - name: Build Docker image
-        run: docker build -t news_summarizer:ci .
+        run: docker compose -f docker-compose.yml build
 
       - name: Deploy to staging
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         env:
           STAGING_HOST: ${{ secrets.STAGING_HOST }}
           STAGING_USER: ${{ secrets.STAGING_USER }}
