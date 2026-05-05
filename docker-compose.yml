@@ -8,9 +8,6 @@ services:
       - "3000:3000"
     env_file:
       - ./backend/api/.env
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
 
   backend_cron:
     build:
@@ -21,9 +18,6 @@ services:
       - ./backend/cron_jobs/.env
     depends_on:
       - backend
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
 
   frontend:
     build:
@@ -36,6 +30,3 @@ services:
       - ./frontend/.env
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules

@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const axios = require('axios');
+const { decode } = require('html-entities');
 const { hasVideo, saveProcessedItem } = require('../../database');
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '';
@@ -42,7 +43,7 @@ async function fetchLatestVideoFromYoutube() {
 
   return {
     id: firstItem.id.videoId,
-    title: firstItem.snippet.title,
+    title: decode(firstItem.snippet.title),
     publishedAt: (firstItem.snippet.publishedAt || '').slice(0, 10),
     youtubeUrl: buildYoutubeUrl(firstItem.id.videoId)
   };

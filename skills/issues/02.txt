@@ -1,0 +1,3 @@
+title that fetch from youtube that not save correctly in database follow vietnamese. fix to support vietnamese.
+
+"title": "Generated: &quot;TỬ HUYỆT&quot; FUJAIRAH &amp; VÀNG GIẢM SÂU, CHỨNG KHOÁN MỸ NGUY CƠ: MỸ - TRUNG QUỐC ĐANG TOAN TÍNH GÌ?",
