@@ -1,0 +1,13 @@
+{
+  "name": "news_summarizer-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"No backend tests available yet\" && exit 0",
+    "build": "echo \"Backend build step placeholder\""
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
