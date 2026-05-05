@@ -23,6 +23,14 @@
       "youtubeUrl": "https://www.youtube.com/watch?v=L_jWHffIx5E",
       "publishedAt": "2026-05-02",
       "source": "seed"
+    },
+    {
+      "id": "1DXdelq5B1A",
+      "title": "Generated: &quot;TỬ HUYỆT&quot; FUJAIRAH &amp; VÀNG GIẢM SÂU, CHỨNG KHOÁN MỸ NGUY CƠ: MỸ - TRUNG QUỐC ĐANG TOAN TÍNH GÌ?",
+      "summary": "Auto-generated summary placeholder from Gemini pipeline. Replace this function with real Gemini API integration.",
+      "youtubeUrl": "https://www.youtube.com/watch?v=1DXdelq5B1A",
+      "publishedAt": "2026-05-05",
+      "source": "youtube-cron"
     }
   ]
 }
