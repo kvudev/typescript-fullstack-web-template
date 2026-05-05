@@ -7,38 +7,36 @@ Create a Pull Request (PR) for each change, which auto-triggers the CI/CD workfl
 Once tests pass, await code review and approval, then merge the PR to the master branch.
 Upon merge to master, auto build and deploy to staging environment via CI/CD.
 
-## Implementation Options:
+## Implementation: GitHub Actions (Recommended)
 
-### GitHub Actions (Current)
-- GitHub Actions workflow file `.github/workflows/ci-cd.yml` defines the pipeline
-- Workflow triggered on push and pull_request events to the `master` branch
-- Integrated directly in GitHub repository
+GitHub Actions is the primary CI/CD solution for this project:
+- **Free**: Unlimited usage for public repositories
+- **No maintenance**: GitHub handles infrastructure
+- **Workflow file**: `.github/workflows/ci-cd.yml` in repository
+- **Triggered on**: push to `master` and pull requests
 
-### Jenkins (Recommended for Production)
-- Comprehensive Jenkinsfile in repository root for declarative pipeline
-- Parallel execution of independent stages
-- Advanced credential management
-- Multi-environment deployment support
-- See `skills/features/12_jenkins_cicd_best_practices.md` for detailed implementation guide
+## Workflow Stages:
 
-## Test Execution:
+1. **Checkout** - Clone repository code
+2. **Setup** - Install Node.js 20
+3. **Install Dependencies** (parallel):
+   - `backend/api/`: `npm install`
+   - `backend/workers/`: `npm install`
+   - `frontend/`: `npm install`
+4. **Test** (parallel):
+   - `backend/api/`: `npm test`
+   - `backend/workers/`: `npm test`
+   - `frontend/`: `npm test`
+5. **Build**: `docker compose build` all services
+6. **Deploy** (master only): Run `scripts/deploy_staging.sh`
 
-- `backend/api/`: runs Jest via `npm test` with coverage
-- `backend/workers/`: runs Jest via `npm test` with coverage  
-- `frontend/`: runs Jest via `npm test` with coverage
+## GitHub Actions Features Used:
 
-## Build & Deploy:
+- **Parallel Jobs**: API, workers, frontend tests run simultaneously
+- **Conditional Deployment**: Only deploy on master branch merges
+- **Status Checks**: PR builds must pass before merging
+- **Notifications**: Auto comments on PRs with build status
 
-- Docker build: uses `docker compose build` to build all services
-- Staging deployment: runs `scripts/deploy_staging.sh` only on master merges
-- Image tagging: uses commit SHA for traceability
-- Registry: push to configured Docker registry
+## Jenkins Alternative (Optional Reference)
 
-## Best Practices:
-
-- Use parallel stages for independent tasks
-- Publish coverage reports and test results
-- Scan dependencies for vulnerabilities
-- Implement conditional deployment gates
-- Maintain separate credentials per environment
-- Setup notifications (email, Slack) on build events
+See `skills/features/12_jenkins_cicd_best_practices.md` for enterprise Jenkins setup if needed for on-premise or complex orchestration requirements.
