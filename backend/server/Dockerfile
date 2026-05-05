@@ -1,9 +1,9 @@
 FROM node:20-alpine
 WORKDIR /app
-COPY api/package.json ./package.json
+COPY server/package.json ./package.json
 RUN npm install
-COPY api ./api
+COPY server ./server
 COPY database ./database
-WORKDIR /app/api
+WORKDIR /app/server
 EXPOSE 3000
 CMD ["npm", "run", "start:server"]

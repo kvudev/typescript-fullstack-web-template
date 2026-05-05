@@ -17,3 +17,20 @@ Dựa trên system_architecutre.md file hãy tạo hệ thống file structure c
 - Frontend: Next.js (cho React framework), Tailwind CSS (cho styling)
 - Database: PostgreSQL + Prisma (cho ORM)
 - Kiến trúc hệ thống: Mermaid (cho sơ đồ kiến trúc)
+
+## Backend API Feature Folder Structure
+
+Trong `backend/server/api/`, mỗi feature cần có cấu trúc tách biệt để dễ mở rộng và test:
+
+- `backend/server/api/<feature>/src/index.js`: entry router/controller của feature
+- `backend/server/api/<feature>/test/`: chứa test cho feature
+
+Ví dụ với feature content:
+
+```text
+backend/server/api/
+	content/
+		src/
+			index.js
+		test/
+```

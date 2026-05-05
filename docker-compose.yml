@@ -2,12 +2,12 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: api/Dockerfile
+      dockerfile: server/Dockerfile
     container_name: news_summarizer_backend
     ports:
       - "3000:3000"
     env_file:
-      - ./backend/api/.env
+      - ./backend/server/.env
     volumes:
       - news_summarizer_data:/app/database/data
 

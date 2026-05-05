@@ -24,9 +24,9 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install backend API dependencies
+      - name: Install backend server dependencies
         run: |
-          cd backend/api
+          cd backend/server
           npm install
 
       - name: Install backend workers dependencies
@@ -39,9 +39,9 @@ jobs:
           cd frontend
           npm install
 
-      - name: Run backend API tests
+      - name: Run backend server tests
         run: |
-          cd backend/api
+          cd backend/server
           npm test
 
       - name: Run backend workers tests

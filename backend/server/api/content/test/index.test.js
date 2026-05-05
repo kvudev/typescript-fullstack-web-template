@@ -1,15 +1,15 @@
 const request = require('supertest');
 
-jest.mock('../../database/index.js', () => ({
+jest.mock('../../../../database/index.js', () => ({
   getAllProcessedItems: jest.fn(),
   saveProcessedItem: jest.fn(),
   seedIfEmpty: jest.fn()
 }));
 
-const database = require('../../database/index.js');
-const app = require('../app');
+const database = require('../../../../database/index.js');
+const app = require('../../../app');
 
-describe('backend/api routes', () => {
+describe('backend/server api/content routes', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
