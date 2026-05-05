@@ -1,17 +1,17 @@
 commit eddited files
-genereate commit mesasage fowllowing the format:
-[lĩnh vực của thay đổi][loại thay đổi]: [nội dung thay đổi]
+genereate commit mesasage fowllowing the format in english::
+[change area][change type]: [change description]
 
-Lĩnh vực của thay đổi:
+Change area:
 - backend
 - frontend
 - ci/cd
-Loại thay đổi:
-- feat: Thêm tính năng mới
-- fix: Sửa lỗi
-- docs: Cập nhật tài liệu
-- style: Thay đổi về giao diện, không ảnh hưởng đến logic
-- refactor: Tái cấu trúc code, không thêm tính năng mới hoặc sửa lỗi
-- chore: Các thay đổi khác, như cấu hình, scripts, v.v.
-Nôi dung thay đổi:
-- Tóm tắt ngắn gọn về những thay đổi đã thực hiện, tập trung vào những điểm chính và ảnh hưởng của chúng đến dự án.
+Change type:
+- feat: Add new feature
+- fix: Fix bug
+- docs: Update documentation
+- style: Change UI, no impact on logic
+- refactor: Refactor code, no new features or bug fixes
+- chore: Other changes, such as configuration, scripts, etc.
+Change description:
+- Provide a brief summary of the changes made, focusing on the main points and their impact on the project.
