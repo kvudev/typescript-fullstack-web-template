@@ -2,12 +2,25 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: api/Dockerfile
     container_name: news_summarizer_backend
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
+    env_file:
+      - ./backend/api/.env
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  backend_cron:
+    build:
+      context: ./backend
+      dockerfile: cron_jobs/Dockerfile
+    container_name: news_summarizer_backend_cron
+    env_file:
+      - ./backend/cron_jobs/.env
+    depends_on:
+      - backend
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -19,9 +32,8 @@ services:
     container_name: news_summarizer_frontend
     ports:
       - "3001:3000"
-    environment:
-      - BACKEND_URL=http://backend:3000
-      - NEXT_PUBLIC_BACKEND_URL=http://localhost:3000
+    env_file:
+      - ./frontend/.env
     depends_on:
       - backend
     volumes:
