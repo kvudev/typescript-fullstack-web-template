@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node index.js",
     "start:cron": "node index.js",
-    "test": "echo \"No backend tests available yet\" && exit 0",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:e2e:gemini": "jest --runInBand fetch_latest_video/test/gemini-api.e2e.test.js",
     "build": "echo \"Backend build step placeholder\""
   },
   "dependencies": {
@@ -13,5 +15,8 @@
     "express": "^4.18.2",
     "html-entities": "^2.5.2",
     "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

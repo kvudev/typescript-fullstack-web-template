@@ -12,8 +12,15 @@ function findChildCronEntryFiles(dirPath) {
 
 		if (entry.isDirectory()) {
 			const childIndex = path.join(fullPath, 'index.js');
+			const childSrcIndex = path.join(fullPath, 'src', 'index.js');
+			if (fs.existsSync(childSrcIndex)) {
+				result.push(childSrcIndex);
+				continue;
+			}
+
 			if (fs.existsSync(childIndex)) {
 				result.push(childIndex);
+				continue;
 			}
 
 			result.push(...findChildCronEntryFiles(fullPath));

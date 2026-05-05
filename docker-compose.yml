@@ -14,10 +14,10 @@ services:
   backend_cron:
     build:
       context: ./backend
-      dockerfile: cron_jobs/Dockerfile
+      dockerfile: workers/Dockerfile
     container_name: news_summarizer_backend_cron
     env_file:
-      - ./backend/cron_jobs/.env
+      - ./backend/workers/.env
     depends_on:
       - backend
     volumes:

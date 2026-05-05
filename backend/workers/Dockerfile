@@ -1,8 +1,8 @@
 FROM node:20-alpine
 WORKDIR /app
-COPY cron_jobs/package.json ./package.json
+COPY workers/package.json ./package.json
 RUN npm install
-COPY cron_jobs ./cron_jobs
+COPY workers ./workers
 COPY database ./database
-WORKDIR /app/cron_jobs
+WORKDIR /app/workers
 CMD ["npm", "run", "start:cron"]
