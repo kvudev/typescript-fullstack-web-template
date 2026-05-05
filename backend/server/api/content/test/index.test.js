@@ -7,7 +7,7 @@ jest.mock('../../../../database/index.js', () => ({
 }));
 
 const database = require('../../../../database/index.js');
-const app = require('../../../app');
+const app = require('../../../index');
 
 describe('backend/server api/content routes', () => {
   beforeEach(() => {
