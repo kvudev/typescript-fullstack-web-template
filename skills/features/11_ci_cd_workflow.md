@@ -20,11 +20,11 @@ GitHub Actions is the primary CI/CD solution for this project:
 1. **Checkout** - Clone repository code
 2. **Setup** - Install Node.js 20
 3. **Install Dependencies** (parallel):
-   - `backend/api/`: `npm install`
+   - `backend/server/`: `npm install`
    - `backend/workers/`: `npm install`
    - `frontend/`: `npm install`
 4. **Test** (parallel):
-   - `backend/api/`: `npm test`
+   - `backend/server/`: `npm test`
    - `backend/workers/`: `npm test`
    - `frontend/`: `npm test`
 5. **Build**: `docker compose build` all services

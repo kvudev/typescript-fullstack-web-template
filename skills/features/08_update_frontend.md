@@ -26,19 +26,6 @@ Card component:
 - Footer:
   - Engagement icons (likes, comments, bookmark, share)
 
-Style:
-- Dark theme similar to GitHub dark:
-  - Background: #0d1117
-  - Card: #161b22
-  - Border: #30363d
-- Text:
-  - Primary: light
-  - Secondary: muted gray
-- Use soft borders instead of heavy shadows
-- Add hover effects:
-  - Slight lift (translateY)
-  - Subtle shadow
-
 Technical:
 - Use Next.js App Router
 - Use TailwindCSS utility classes only

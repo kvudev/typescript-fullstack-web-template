@@ -8,22 +8,25 @@ function findChildCronEntryFiles(dirPath) {
 	const result = [];
 
 	for (const entry of entries) {
+		if (!entry.isDirectory()) {
+			continue;
+		}
+
+		if (entry.name === 'node_modules' || entry.name.startsWith('.')) {
+			continue;
+		}
+
 		const fullPath = path.join(dirPath, entry.name);
+		const childIndex = path.join(fullPath, 'index.js');
+		const childSrcIndex = path.join(fullPath, 'src', 'index.js');
 
-		if (entry.isDirectory()) {
-			const childIndex = path.join(fullPath, 'index.js');
-			const childSrcIndex = path.join(fullPath, 'src', 'index.js');
-			if (fs.existsSync(childSrcIndex)) {
-				result.push(childSrcIndex);
-				continue;
-			}
+		if (fs.existsSync(childSrcIndex)) {
+			result.push(childSrcIndex);
+			continue;
+		}
 
-			if (fs.existsSync(childIndex)) {
-				result.push(childIndex);
-				continue;
-			}
-
-			result.push(...findChildCronEntryFiles(fullPath));
+		if (fs.existsSync(childIndex)) {
+			result.push(childIndex);
 		}
 	}
 

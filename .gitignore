@@ -10,3 +10,4 @@ logs/
 coverage/
 *.log
 .vscode/
+skills/logger/
