@@ -1,18 +1,17 @@
 import { useState } from 'react';
 
-export default function Toolbar({ itemCount, onFilterChange }) {
-  const [activeFilter, setActiveFilter] = useState('all');
+export default function Toolbar({ itemCount, activeView = 'for-you', onViewChange }) {
+  const [activeFilter, setActiveFilter] = useState(activeView);
 
   const filters = [
-    { id: 'all', label: 'All News' },
-    { id: 'trending', label: 'Trending' },
+    { id: 'for-you', label: 'Feed Settings' },
     { id: 'following', label: 'Following' },
-    { id: 'recent', label: 'Recent' }
+    { id: 'trending', label: 'Trending' }
   ];
 
   const handleFilter = (filterId) => {
     setActiveFilter(filterId);
-    onFilterChange?.(filterId);
+    onViewChange?.(filterId);
   };
 
   return (
@@ -38,7 +37,19 @@ export default function Toolbar({ itemCount, onFilterChange }) {
         {/* Right Actions */}
         <div className="flex items-center gap-3 ml-4">
           {/* Shortcuts Button */}
-          <button className="p-2 hover:bg-[#161b22] rounded-md transition text-gray-400 hover:text-gray-300">
+          <button
+            type="button"
+            aria-label="Open shortcuts"
+            className="rounded-full border border-[#30363d] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-gray-300 transition hover:bg-[#161b22]"
+          >
+            Shortcuts
+          </button>
+
+          <button
+            type="button"
+            aria-label="Open feed settings"
+            className="p-2 hover:bg-[#161b22] rounded-md transition text-gray-400 hover:text-gray-300"
+          >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5A2.25 2.25 0 008.25 22.5h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 9.75a.75.75 0 111.5 0 .75.75 0 01-1.5 0z" />
             </svg>
