@@ -1,15 +1,18 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
       - master
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
 
 jobs:
   build-and-deploy:
+    if: github.head_ref != 'master'
     runs-on: ubuntu-latest
 
     steps:
@@ -53,12 +56,3 @@ jobs:
 
       - name: Build Docker image
         run: docker compose -f docker-compose.yml build
-
-      - name: Deploy to staging
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        env:
-          STAGING_HOST: ${{ secrets.STAGING_HOST }}
-          STAGING_USER: ${{ secrets.STAGING_USER }}
-        run: |
-          chmod +x scripts/deploy_staging.sh
-          ./scripts/deploy_staging.sh
