@@ -3,18 +3,19 @@ const express = require('express');
 function createContentRouter({ getAllProcessedItems, saveProcessedItem }) {
   const router = express.Router();
 
-  router.get('/latest', (req, res) => {
-    const items = getAllProcessedItems();
+  router.get('/latest', async (req, res) => {
+    const items = await getAllProcessedItems();
     res.json({ item: items[0] || null });
   });
 
-  router.get('/', (req, res) => {
+  router.get('/', async (req, res) => {
     const { search = '', date = '' } = req.query;
 
     const normalizedSearch = String(search).trim().toLowerCase();
     const normalizedDate = String(date).trim();
 
-    const filtered = getAllProcessedItems().filter((item) => {
+    const items = await getAllProcessedItems();
+    const filtered = items.filter((item) => {
       const titleMatch = item.title.toLowerCase().includes(normalizedSearch);
       const summaryMatch = item.summary.toLowerCase().includes(normalizedSearch);
       const searchMatch = !normalizedSearch || titleMatch || summaryMatch;
@@ -26,14 +27,14 @@ function createContentRouter({ getAllProcessedItems, saveProcessedItem }) {
     res.json({ items: filtered });
   });
 
-  router.post('/ingest', express.json(), (req, res) => {
+  router.post('/ingest', express.json(), async (req, res) => {
     const payload = req.body || {};
 
     if (!payload.videoId || !payload.title || !payload.youtubeUrl) {
       return res.status(400).json({ message: 'videoId, title, and youtubeUrl are required' });
     }
 
-    const item = saveProcessedItem({
+    const item = await saveProcessedItem({
       id: payload.videoId,
       title: payload.title,
       summary: payload.summary || 'Generated summary is pending.',

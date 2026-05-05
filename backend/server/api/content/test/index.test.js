@@ -1,12 +1,6 @@
 const request = require('supertest');
 
-jest.mock('../../../../database/index.js', () => ({
-  getAllProcessedItems: jest.fn(),
-  saveProcessedItem: jest.fn(),
-  seedIfEmpty: jest.fn()
-}));
-
-const database = require('../../../../database/index.js');
+const service = require('layer/feature/youtube');
 const app = require('../../../index');
 
 describe('backend/server api/content routes', () => {
@@ -30,7 +24,7 @@ describe('backend/server api/content routes', () => {
       publishedAt: '2026-05-05',
       source: 'youtube-cron'
     };
-    database.getAllProcessedItems.mockReturnValue([item]);
+    service.getAllProcessedItems.mockResolvedValue([item]);
 
     const response = await request(app).get('/api/content/latest');
 
@@ -39,7 +33,7 @@ describe('backend/server api/content routes', () => {
   });
 
   test('GET /api/content filters by search and date', async () => {
-    database.getAllProcessedItems.mockReturnValue([
+    service.getAllProcessedItems.mockResolvedValue([
       {
         id: 'video-1',
         title: 'AI news update',
@@ -81,7 +75,7 @@ describe('backend/server api/content routes', () => {
       publishedAt: '2026-05-05',
       source: 'api'
     };
-    database.saveProcessedItem.mockReturnValue(savedItem);
+    service.saveProcessedItem.mockResolvedValue(savedItem);
 
     const response = await request(app).post('/api/content/ingest').send({
       videoId: 'video-3',
@@ -92,7 +86,7 @@ describe('backend/server api/content routes', () => {
     });
 
     expect(response.status).toBe(201);
-    expect(database.saveProcessedItem).toHaveBeenCalled();
+    expect(service.saveProcessedItem).toHaveBeenCalled();
     expect(response.body).toEqual({ item: savedItem });
   });
 });

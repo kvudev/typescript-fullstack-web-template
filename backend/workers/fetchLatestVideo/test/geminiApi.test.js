@@ -3,13 +3,8 @@ jest.mock('axios', () => ({
   post: jest.fn()
 }));
 
-jest.mock('../../../database/index.js', () => ({
-  hasVideo: jest.fn(),
-  saveProcessedItem: jest.fn()
-}));
-
 const axios = require('axios');
-const database = require('../../../database/index.js');
+const service = require('layer/feature/youtube');
 
 process.env.GEMINI_API_KEY = 'test-gemini-key';
 process.env.YOUTUBE_API_KEY = 'test-youtube-key';
@@ -51,10 +46,10 @@ const geminiResponse = {
   }
 };
 
-describe('fetch_latest_video Gemini integration', () => {
+describe('fetchLatestVideo Gemini integration', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    database.hasVideo.mockReturnValue(false);
+    service.hasVideo.mockResolvedValue(false);
     axios.get.mockResolvedValue(youtubeResponse);
     axios.post.mockResolvedValue(geminiResponse);
   });
@@ -81,7 +76,7 @@ describe('fetch_latest_video Gemini integration', () => {
       expect.objectContaining({ params: expect.objectContaining({ type: 'video' }) })
     );
     expect(axios.post).toHaveBeenCalled();
-    expect(database.saveProcessedItem).toHaveBeenCalledWith(
+    expect(service.saveProcessedItem).toHaveBeenCalledWith(
       expect.objectContaining({
         id: 'abc123',
         title: 'AI tooling update in brief',
@@ -92,10 +87,10 @@ describe('fetch_latest_video Gemini integration', () => {
   });
 
   test('runFeatureCronJob skips save when video already exists', async () => {
-    database.hasVideo.mockReturnValue(true);
+    service.hasVideo.mockResolvedValue(true);
 
     await testingApi.runFeatureCronJob();
 
-    expect(database.saveProcessedItem).not.toHaveBeenCalled();
+    expect(service.saveProcessedItem).not.toHaveBeenCalled();
   });
 });

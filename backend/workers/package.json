@@ -7,13 +7,14 @@
     "start:cron": "node index.js",
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
-    "test:e2e:gemini": "jest --runInBand fetch_latest_video/test/gemini-api.e2e.test.js",
+    "test:e2e:gemini": "jest --runInBand fetchLatestVideo/test/geminiApi.test.js",
     "build": "echo \"Backend build step placeholder\""
   },
   "dependencies": {
     "axios": "^1.7.7",
     "express": "^4.18.2",
     "html-entities": "^2.5.2",
+    "layer": "file:../layer",
     "node-cron": "^3.0.3"
   },
   "devDependencies": {

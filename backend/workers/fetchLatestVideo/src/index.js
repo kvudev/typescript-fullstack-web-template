@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const axios = require('axios');
 const { decode } = require('html-entities');
-const { hasVideo, saveProcessedItem } = require('../../../database');
+const { hasVideo, saveProcessedItem } = require('layer/feature/youtube');
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '';
 const YOUTUBE_CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || '';
@@ -50,14 +50,14 @@ async function callGeminiGenerateContent(prompt) {
   const modelCandidates = [
     GEMINI_MODEL,
     'gemini-2.0-flash',
-    'gemini-1.5-flash',
-    'gemini-1.5-flash-latest'
+    'gemini-1.5-flash'
   ].filter(Boolean);
 
   const uniqueModels = [...new Set(modelCandidates)];
   const apiVersions = ['v1beta', 'v1'];
 
   let lastError = null;
+  let quotaError = null;
 
   for (const version of apiVersions) {
     for (const model of uniqueModels) {
@@ -83,7 +83,13 @@ async function callGeminiGenerateContent(prompt) {
         lastError = error;
         const status = error?.response?.status;
 
-        if (status === 404 || status === 400 || status === 429) {
+        if (status === 429) {
+          quotaError = quotaError || error;
+          console.log(`[cron] Gemini ${version}/${model} hit quota/rate limit (429). Retrying next candidate...`);
+          continue;
+        }
+
+        if (status === 404 || status === 400) {
           console.log(`[cron] Gemini ${version}/${model} failed with status ${status}. Retrying next candidate...`);
           continue;
         }
@@ -93,7 +99,7 @@ async function callGeminiGenerateContent(prompt) {
     }
   }
 
-  throw lastError || new Error('No valid Gemini endpoint/model combination found.');
+  throw quotaError || lastError || new Error('No valid Gemini endpoint/model combination found.');
 }
 
 async function generateContentWithGemini(video) {
@@ -179,7 +185,7 @@ async function runFeatureCronJob() {
       return;
     }
 
-    if (hasVideo(latestVideo.id)) {
+    if (await hasVideo(latestVideo.id)) {
       console.log(`[cron] Video ${latestVideo.id} already processed. Skipping.`);
       return;
     }
@@ -194,7 +200,7 @@ async function runFeatureCronJob() {
       source: 'youtube-cron'
     };
 
-    saveProcessedItem(processedItem);
+    await saveProcessedItem(processedItem);
     console.log(`[cron] Stored new processed video ${processedItem.id}.`);
   } catch (error) {
     console.error('[cron] Failed to execute cron cycle:', error.message);
@@ -206,12 +212,12 @@ function startFetchLatestVideoCron() {
     runFeatureCronJob();
   });
 
-  console.log('[cron] fetch_latest_video started. Runs every 5 minutes.');
+  console.log('[cron] fetchLatestVideo started. Runs every 5 minutes.');
   runFeatureCronJob();
 }
 
 module.exports = {
-  name: 'fetch_latest_video',
+  name: 'fetchLatestVideo',
   start: startFetchLatestVideoCron,
   __testing: {
     callGeminiGenerateContent,

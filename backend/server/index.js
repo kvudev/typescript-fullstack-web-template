@@ -3,7 +3,7 @@ const {
   getAllProcessedItems,
   saveProcessedItem,
   seedIfEmpty
-} = require('../database');
+} = require('layer/feature/youtube');
 const createApiRouter = require('./api');
 
 const app = express();
@@ -38,7 +38,9 @@ const seedContent = [
   }
 ];
 
-seedIfEmpty(seedContent);
+const initializePromise = Promise.resolve(seedIfEmpty(seedContent)).catch((error) => {
+  console.error('[server] Failed to initialize seed data:', error.message);
+});
 
 app.use('/api', createApiRouter({ getAllProcessedItems, saveProcessedItem }));
 
@@ -48,8 +50,10 @@ app.get('/', (req, res) => {
 
 const port = process.env.PORT || 3000;
 if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`Backend server running on http://localhost:${port}`);
+  initializePromise.then(() => {
+    app.listen(port, () => {
+      console.log(`Backend server running on http://localhost:${port}`);
+    });
   });
 }
 
