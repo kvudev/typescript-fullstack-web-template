@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "module": "nodenext",
+    "moduleResolution": "NodeNext",
+    "target": "esnext",
+    "lib": ["esnext"],
+    "types": ["node"],
+    "baseUrl": ".",
+     "paths": {
+      "@/*": ["src/*"],
+      "@db/*": ["src/db/*"],
+      "@feature/*": ["src/feature/*"],
+      "@utils/*": ["src/utils/*"]
+    },
+  },
+  "exclude": ["node_modules", "dist"]
+}

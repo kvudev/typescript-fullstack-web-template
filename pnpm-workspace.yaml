@@ -1,0 +1,6 @@
+packages:
+  - backend/layer
+  - backend/db
+  - backend/api
+  - backend/batch
+  - frontend/web

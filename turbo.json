@@ -1,0 +1,83 @@
+{
+    "$schema": "https://turbo.build/json-schema.json",
+    "globalDependencies": [
+        "**/.env.local",
+        "**/.env"
+    ],
+    "tasks": {
+        "build": {
+            "dependsOn": [
+                "^build"
+            ],
+            "inputs": [
+                "src/**",
+                "*.config.*",
+                "tsconfig.json",
+                "package.json"
+            ],
+            "outputs": [
+                "dist/**",
+                ".next/**"
+            ],
+            "cache": true
+        },
+        "dev": {
+            "cache": false,
+            "persistent": true
+        },
+        "lint": {
+            "inputs": [
+                "src/**",
+                "*.config.*",
+                "tsconfig.json"
+            ],
+            "cache": true
+        },
+        "test": {
+            "inputs": [
+                "src/**",
+                "tests/**",
+                "jest.config.*",
+                "tsconfig.json"
+            ],
+            "outputs": [
+                "coverage/**"
+            ],
+            "cache": true
+        },
+        "test:e2e": {
+            "cache": false
+        },
+        "db:generate": {
+            "cache": true,
+            "outputs": [
+                "node_modules/.prisma/**",
+                "generated/**"
+            ]
+        },
+        "db:migrate": {
+            "cache": false,
+            "interactive": true
+        },
+        "db:migrate:deploy": {
+            "cache": false
+        },
+        "db:studio": {
+            "cache": false,
+            "interactive": true,
+            "persistent": true
+        },
+        "start": {
+            "cache": false,
+            "persistent": true,
+            "dependsOn": [
+                "build"
+            ]
+        }
+    },
+    "globalPassThroughEnv": [
+        "NODE_ENV",
+        "DATABASE_URL",
+        "NEXT_PUBLIC_*"
+    ]
+}

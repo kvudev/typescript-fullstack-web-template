@@ -1,0 +1,25 @@
+{
+  "name": "news-summarizer",
+  "private": true,
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
+    "db:migrate": "pnpm --filter @ts-project-template/db db:migrate",
+    "db:generate": "pnpm --filter @ts-project-template/db db:generate",
+    "db:studio": "pnpm --filter @ts-project-template/db db:studio"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.57.0",
+    "turbo": "^2.9.9",
+    "typescript": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  }
+}

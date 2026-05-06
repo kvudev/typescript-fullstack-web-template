@@ -1,58 +1,100 @@
+version: '3.9'
+
 services:
-  db:
+  postgres:
     image: postgres:16-alpine
-    container_name: news_summarizer_db
-    env_file:
-      - ./backend/database/.env
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ts-template
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
-      - news_summarizer_pg_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 5
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: server/Dockerfile
-    container_name: news_summarizer_backend
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
     ports:
-      - "3000:3000"
-    env_file:
-      - ./backend/server/.env
-    command: sh -c "cd /app/database && npx prisma db push --schema prisma/schema.prisma && cd /app/server && npm run start:server"
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-migrate:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+      target: builder
+    command: sh -c "pnpm --filter @ts-project-template/db db:migrate:deploy"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ts-template?schema=public
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
 
-  backend_cron:
+  api:
     build:
-      context: ./backend
-      dockerfile: workers/Dockerfile
-    container_name: news_summarizer_backend_cron
-    env_file:
-      - ./backend/workers/.env
-    depends_on:
-      db:
-        condition: service_healthy
-      backend:
-        condition: service_started
-    command: sh -c "cd /app/database && npx prisma db push --schema prisma/schema.prisma && cd /app/workers && npm run start:cron"
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: news_summarizer_frontend
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    restart: unless-stopped
     ports:
-      - "3001:3000"
-    env_file:
-      - ./frontend/.env
+      - '3001:3001'
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ts-template?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      API_PORT: 3001
+      CORS_ORIGIN: http://localhost:3000
     depends_on:
-      - backend
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/worker.Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ts-template?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      WORKER_CONCURRENCY: 5
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/web.Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - api
 
 volumes:
-  news_summarizer_pg_data:
+  postgres_data:

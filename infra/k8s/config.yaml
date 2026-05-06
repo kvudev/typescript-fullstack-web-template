@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  redis-host: redis
+  redis-port: '6379'
+  api-url: http://api:3001
+---
+# Create this secret via kubectl — never commit real values
+# kubectl create secret generic app-secrets \
+#   --from-literal=database-url='postgresql://user:pass@postgres:5432/news_summarizer'
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+type: Opaque
+stringData:
+  database-url: postgresql://postgres:postgres@postgres:5432/news_summarizer
