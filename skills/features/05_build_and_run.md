@@ -1,1 +1,0 @@
-build and run both frontend and backend locally on Docker desktop by using docker-compose.

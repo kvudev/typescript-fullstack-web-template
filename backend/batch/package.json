@@ -1,0 +1,23 @@
+{
+  "name": "@news-summarizer/batch",
+  "version": "1.0.0",
+  "description": "BullMQ workers",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/main.ts",
+    "start": "node dist/main",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "bullmq": "^5.7.0",
+    "ioredis": "^5.3.2",
+    "@news-summarizer/layer": "workspace:*",
+    "@news-summarizer/db": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2"
+  }
+}
